@@ -1,20 +1,13 @@
 package nz.atomic.skadi
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.SurfaceView
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import nz.atomic.skadi.extensions.canny
-import nz.atomic.skadi.extensions.flip
-import nz.atomic.skadi.extensions.resize
-import nz.atomic.skadi.extensions.transpose
-import org.opencv.android.CameraBridgeViewBase
 import org.opencv.android.OpenCVLoader
-import org.opencv.core.Mat
 
-class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
-
-    private lateinit var cameraView: CameraBridgeViewBase
+class MainActivity : AppCompatActivity() {
 
     init {
         // Load OpenCV library
@@ -30,31 +23,11 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        cameraView = findViewById(R.id.cameraView)
-        cameraView.visibility = SurfaceView.VISIBLE
-        cameraView.setCvCameraViewListener(this)
+        val takePhotoBtn: Button = findViewById(R.id.takePhotoBtn)
+        takePhotoBtn.setOnClickListener {
+            val intent = Intent(this, TakePhotoActivity::class.java)
+            startActivity(intent)
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        cameraView.enableView()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        cameraView.disableView()
-    }
-
-    override fun onCameraViewStarted(width: Int, height: Int) {}
-
-    override fun onCameraViewStopped() {}
-
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
-        val inputGray = inputFrame.gray()
-        return inputGray
-            .transpose()
-            .flip()
-            .canny(50.0, 100.0)
-            .resize(inputGray.size())
-    }
 }
