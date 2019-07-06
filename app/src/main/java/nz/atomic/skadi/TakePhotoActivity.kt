@@ -4,9 +4,6 @@ import android.os.Bundle
 import android.view.SurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import nz.atomic.skadi.extensions.canny
-import nz.atomic.skadi.extensions.flip
-import nz.atomic.skadi.extensions.resize
-import nz.atomic.skadi.extensions.transpose
 import org.opencv.android.CameraBridgeViewBase
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -21,7 +18,6 @@ class TakePhotoActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraView
         setContentView(R.layout.activity_take_photo)
 
         cameraView = findViewById(R.id.cameraView)
-        cameraView.setMaxFrameSize(720, 480)
         cameraView.visibility = SurfaceView.VISIBLE
         cameraView.setCvCameraViewListener(this)
     }
@@ -48,9 +44,6 @@ class TakePhotoActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraView
         val frameIn = inputFrame.gray()
 
         return frameIn
-            .transpose(frameOut)
-            .flip(frameOut)
             .canny(frameOut, 50.0, 100.0)
-            .resize(frameOut, frameIn.size())
     }
 }
